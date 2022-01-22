@@ -18,5 +18,13 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build the Docker image
       run: docker-compose -f "docker-compose.yml" up -d --build
+    - name: PHP version check
+      run:  php -v
+    - name: Mongodb driver check
+      run:  php -m | grep mongo
+    - name: Mysql Driver check
+      run: php -m | grep mysqli
     - name: Composer test
       run: composer
+    - name: Laravel8 test
+      run:  composer create-project --prefer-dist laravel/laravel:^8.0 .
