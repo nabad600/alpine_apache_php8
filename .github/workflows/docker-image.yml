@@ -27,4 +27,4 @@ jobs:
     - name: Composer test
       run: composer
     - name: Laravel8 test
-      run:  composer create-project --prefer-dist laravel/laravel:^8.0 .
+      run:  composer create-project --prefer-dist laravel/laravel:^8.0
