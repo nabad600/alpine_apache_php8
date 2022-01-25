@@ -34,4 +34,4 @@ jobs:
     - name: Laravel8 test
       run:  composer create-project --prefer-dist laravel/laravel:^8.0
     - name: Web site Test
-      run: curl -I --http2 http://localhost:5564/public/index.html | grep HTTP
+      run: curl -I http://localhost:5564/public/index.html | grep HTTP
