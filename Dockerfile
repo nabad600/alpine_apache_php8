@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:latest AS builder
 LABEL maintainer Naba Das <hello@get-deck.com>
 ARG BUILD_DATE
 ARG VCS_REF
@@ -57,7 +57,6 @@ ARG DEPS="\
         php81-posix \
         php81-apache2 \
         php81-pdo \
-        php81-intl \
         php81-pdo_dblib \
         php81-pdo_mysql \
         php81-pdo_odbc \
@@ -72,7 +71,6 @@ ARG DEPS="\
         runit \
         apache2 \
         apache2-utils \
-        php81-pecl-mongodb \
 "
 
 RUN set -x \
@@ -99,15 +97,15 @@ sed -i "s#{DISPLAY}#On#g" /etc/php81/php.ini \
 sed -i "s#{DISPLAY}#Off#g" /etc/php81/php.ini \
 ;fi
 
-RUN apk add --no-cache gdbm libsasl snappy gcc make g++ zlib-dev php81-zip zip unzip
-RUN apk add --no-cache php81-pecl-mongodb openssl openssl-dev curl openrc nano bash icu-libs p7zip
+RUN apk add --no-cache openssl openssl-dev curl openrc nano bash icu-libs p7zip gdbm libsasl snappy gcc make g++ zlib-dev php81-zip zip unzip icu-dev 
 
 RUN ln -s /usr/bin/php81 /usr/bin/php
-RUN apk add --no-cache openssl openssl-dev openrc nano bash icu-libs gcc make g++ zlib-dev curl gdbm libsasl snappy
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 RUN apk update
 RUN apk upgrade
-
+FROM scratch
+COPY --from=builder / /
+WORKDIR /var/www
 RUN chmod +x /etc/service/apache/run
 RUN chmod +x /sbin/runit-wrapper
 RUN chmod +x /sbin/runsvdir-start
